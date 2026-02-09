@@ -2,7 +2,7 @@
 
 Ejercicio de Clase de Puesta en producción segura
 
-## 🚀 Despliegue con Docker Compose (v4.0)
+## Despliegue con Docker Compose (v4.0)
 
 Esta versión utiliza **Docker Compose** para orquestar la aplicación web (Flask) y la base de datos (MongoDB).
 
