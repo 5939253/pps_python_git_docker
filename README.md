@@ -1,17 +1,22 @@
 # pps_python_git_docker
+
 Ejercicio de Clase de Puesta en producción segura
-## 🐳 Despliegue con Docker (v3.0)
-Esta aplicación está dockerizada para garantizar un entorno estable.
+
+## 🚀 Despliegue con Docker Compose (v4.0)
+
+Esta versión utiliza **Docker Compose** para orquestar la aplicación web (Flask) y la base de datos (MongoDB).
 
 ### Requisitos
+
 * Docker Desktop instalado y en ejecución.
+* Archivo `frases.txt` en la raíz del proyecto.
 
 ### Instrucciones de ejecución
-1. **Construir la imagen:**
-   ```bash
-   docker build -t bayeta-app .
-Desplegar el contenedor:
 
-Bash
-docker run -d -p 5000:5000 --name contenedor-bayeta bayeta-app
-Acceso: Abre tu navegador en http://localhost:5000/frotar/5 (donde 5 es el número de frases deseadas).
+Ya no es necesario construir y ejecutar los contenedores por separado. Ahora simplemente usa:
+
+1. **Levantar el ecosistema:**
+
+   ``` bash
+   docker compose up --build
+   ```

@@ -1,9 +1,9 @@
-from pymongo import MongoClient
 import os
+from pymongo import MongoClient
 
-# 1. Instanciación: Conexión con el motor, BBDD y colección
 def instanciar():
-    cliente = MongoClient('mongodb://localhost:27017/')
+    mongo_url = os.environ.get('MONGO_URL', 'mongodb://db:27017/')
+    cliente = MongoClient(mongo_url, serverSelectionTimeoutMS=5000)
     bd = cliente['bayeta']
     return bd['frases_auspiciosas']
 
