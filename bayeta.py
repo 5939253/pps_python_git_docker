@@ -1,17 +1,39 @@
-import random
+from pymongo import MongoClient
+import os
 
+# 1. Instanciación: Conexión con el motor, BBDD y colección
+def instanciar():
+    cliente = MongoClient('mongodb://localhost:27017/')
+    bd = cliente['bayeta']
+    return bd['frases_auspiciosas']
+
+# 2. Inicialización: Carga datos desde el fichero si la BBDD está vacía
+def inicializar(fichero="frases.txt"):
+    coleccion = instanciar()
+    
+    # Solo insertamos si la colección está vacía
+    if coleccion.count_documents({}) == 0:
+        if os.path.exists(fichero):
+            with open(fichero, 'r', encoding='utf-8') as f:
+                # Creamos la lista de diccionarios para Mongo
+                frases = [{"frase": linea.strip()} for linea in f if linea.strip()]
+            
+            if frases:
+                coleccion.insert_many(frases)
+                print(f"Base de datos inicializada con {len(frases)} frases.")
+        else:
+            print("Error: No se encuentra el fichero de frases.")
+
+# 3. Consulta: Obtiene N frases aleatorias de Mongo
+def consultar(n_frases: int = 1) -> list:
+    coleccion = instanciar()
+    
+    pipeline = [{"$sample": {"size": n_frases}}]
+    resultados = list(coleccion.aggregate(pipeline))
+    
+    # Extraemos solo el texto de la frase
+    return [r['frase'] for r in resultados]
+
+# Esta función es la que llama app.py
 def frotar(n_frases: int = 1) -> list:
-    datos = [
-        "El éxito es como un fantasma, muchos hablan de él, pero pocos lo han visto de verdad",
-        "La aventura de hoy es la historia de terror del mañana",
-        "Enfrenta tus miedos, o pídeles alquiler por vivir en tu cabeza",
-        "Ríe y el mundo reirá contigo. Llora, y te darán una cuenta de Twitter",
-        "Sigue tu corazón, pero recuerda llevar tu cerebro contigo",
-        "La felicidad es como un rayo de sol, disfrútala antes de que el cambio climático la arruine"
-    ]
-    
-    # Nos aseguramos de no pedir más frases de las que tenemos
-    k = min(n_frases, len(datos))
-    
-    # Seleccionamos k frases aleatorias sin repetición
-    return random.sample(datos, k=k)
+    return consultar(n_frases)
