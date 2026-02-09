@@ -34,6 +34,22 @@ def consultar(n_frases: int = 1) -> list:
     # Extraemos solo el texto de la frase
     return [r['frase'] for r in resultados]
 
+def insertar_frases(lista_nuevas_frases):
+    """
+    Recibe una lista de frases (strings) y las inserta en la base de datos.
+    """
+    coleccion = instanciar()
+    
+    if not lista_nuevas_frases:
+        return False
+        
+    # Convertimos la lista de strings en una lista de diccionarios para Mongo
+    documentos = [{"frase": f} for f in lista_nuevas_frases]
+    
+    # Insertamos en la colección
+    resultado = coleccion.insert_many(documentos)
+    return len(resultado.inserted_ids) > 0
+
 # Esta función es la que llama app.py
 def frotar(n_frases: int = 1) -> list:
     return consultar(n_frases)
